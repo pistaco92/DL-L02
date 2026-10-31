@@ -1,0 +1,12 @@
+.git
+.gitignore
+.idea
+.devcontainer
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+results/
+dataset/
+docs/
+README.md

@@ -1,0 +1,46 @@
+{
+  "name": "DL-2026-02-L02 (PyTorch + CUDA)",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+
+  // Genera la especificación CDI de NVIDIA a nivel de usuario para Podman rootless
+  "initializeCommand": "mkdir -p ${localEnv:HOME}/.config/cdi && nvidia-ctk cdi generate --output=${localEnv:HOME}/.config/cdi/nvidia.yaml 2>/dev/null || true",
+
+  // Argumentos para Podman rootless, SELinux (Aurora / Fedora Kinoite) y GPU NVIDIA via CDI
+  "runArgs": [
+    "--userns=keep-id:uid=1000,gid=1000",
+    "--security-opt=label=disable",
+    "--device=nvidia.com/gpu=all"
+  ],
+
+  "containerEnv": {
+    "HOME": "/home/ubuntu",
+    "CONDA_DEFAULT_ENV": "lab_pytorch"
+  },
+
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind,Z",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/opt/conda/envs/lab_pytorch/bin/python",
+        "python.terminal.activateEnvironment": true
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter"
+      ]
+    },
+    "jetbrains": {
+      "backend": "PyCharm"
+    }
+  },
+
+  "remoteUser": "ubuntu",
+  "containerUser": "ubuntu",
+  "updateRemoteUserUID": false
+}
